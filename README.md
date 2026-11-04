@@ -1,7 +1,7 @@
 # RiQ
 
-**RiQ** is a free parametric equalizer plugin in VST3 format for Windows and
-Linux. It is a C++ port of the **ReEQ2 2.0.2** JSFX by Justin Johnson for
+**RiQ** is a free parametric equalizer plugin in VST3 format for Windows,
+Linux and macOS. It is a C++ port of the **ReEQ2 2.0.2** JSFX by Justin Johnson for
 REAPER: the same filter math, dynamics and auto gain, with a native
 interface in the style of modern equalizers. It is built on
 [Capibara](https://github.com/Yagafgaf/Capibara), a small VST3 plugin
@@ -17,9 +17,12 @@ Get the latest build from the [Releases](https://github.com/Yagafgaf/RiQ-EQ/rele
 |---|---|---|
 | Windows 10/11, x64 | `RiQ-<version>-Windows-x64-VST3.zip` | `C:\Program Files\Common Files\VST3\` |
 | Linux, x64 (glibc 2.35+, e.g. Ubuntu 22.04 or newer) | `RiQ-<version>-Linux-x64-VST3.zip` | `~/.vst3/` |
+| macOS 11+, universal (arm64 + x86_64) | `RiQ-<version>-macOS-universal-VST3.zip` | `~/Library/Audio/Plug-Ins/VST3/` |
 
 Unzip the archive and copy the `RiQ.vst3` folder to the path above, then
-rescan plugins in your host. macOS builds are not available yet.
+rescan plugins in your host. The macOS build is universal and ad-hoc
+signed; if the downloaded bundle is quarantined, clear the attribute with
+`xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/RiQ.vst3`.
 
 RiQ is developed and tested in REAPER (native Linux, and the Windows build
 through yabridge). It should work in any VST3 host, but other hosts are
