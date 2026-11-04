@@ -28,7 +28,10 @@ with `xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/RiQ.vst3`.
 RiQ is developed and tested in REAPER (native Linux, and the Windows build
 through yabridge). It should work in any VST3 host, but other hosts are
 not tested yet. Projects saved with earlier RiQ releases load unchanged and
-sound the same.
+sound the same. One exception: since 0.842 Output Gain spans -30..+12 dB
+instead of +-12 dB, so Output Gain automation recorded with an earlier
+release plays back at other values (the saved Output Gain itself loads
+as it was).
 
 ## Features
 
@@ -52,16 +55,21 @@ sound the same.
   heat display, tilt, peak hold, 1/48 to 1/6 octave smoothing, sidechain
   "ghost" spectrum for dynamic bands.
 - **Interface:** resizable window, 100 to 250 % scale, compact modes, piano
-  strip, dB range 3/6/12/30 dB, multi-selection, precise value entry,
-  colour themes, GPU (OpenGL) or software rendering.
-- Input/output gain, polarity, Mid/Side or Left/Right input gains, output
+  strip (C0 to C8), dB range 3/6/12/30 dB, multi-selection, precise value
+  entry, colour themes, GPU (OpenGL) or software rendering. "Save as
+  default" in the gear menu keeps the window and the analyzer and display
+  settings for new instances.
+- Input gain, output gain from -30 to +12 dB, polarity, Mid/Side or Left/Right input gains, output
   meters, host bypass with latency kept, mono and stereo layouts,
   64-bit processing.
 
 ## Controls
 
-- **Node:** drag to change frequency and gain, mouse wheel for Q, double
-  click to bypass, `Alt` + click to delete.
+- **Node:** drag to change frequency and gain, mouse wheel for Q in 0.1
+  steps (the slope on Low/High Cut), double click to bypass, `Alt` + click
+  to delete.
+- **Piano strip:** the key under the pointer lights up with its name; drag
+  a band's dot along the keys to move the band from note to note.
 - **Empty space:** double click to add a band; drag a box or `Shift` + click
   to select several nodes and move them together.
 - **Right click on a node:** shape, slope, stereo placement, dynamics,
