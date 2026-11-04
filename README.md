@@ -17,12 +17,13 @@ Get the latest build from the [Releases](https://github.com/Yagafgaf/RiQ-EQ/rele
 |---|---|---|
 | Windows 10/11, x64 | `RiQ-<version>-Windows-x64-VST3.zip` | `C:\Program Files\Common Files\VST3\` |
 | Linux, x64 (glibc 2.35+, e.g. Ubuntu 22.04 or newer) | `RiQ-<version>-Linux-x64-VST3.zip` | `~/.vst3/` |
-| macOS 11+, universal (arm64 + x86_64) | `RiQ-<version>-macOS-universal-VST3.zip` | `~/Library/Audio/Plug-Ins/VST3/` |
+| macOS 11+, Apple Silicon (arm64) | `RiQ-<version>-macOS-arm64-VST3.zip` | `~/Library/Audio/Plug-Ins/VST3/` |
 
 Unzip the archive and copy the `RiQ.vst3` folder to the path above, then
-rescan plugins in your host. The macOS build is universal and ad-hoc
-signed; if the downloaded bundle is quarantined, clear the attribute with
-`xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/RiQ.vst3`.
+rescan plugins in your host. The macOS build is for Apple Silicon (arm64),
+runs on macOS 11 or newer and is ad-hoc signed; Intel Macs are not covered
+by this build. If the downloaded bundle is quarantined, clear the attribute
+with `xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/RiQ.vst3`.
 
 RiQ is developed and tested in REAPER (native Linux, and the Windows build
 through yabridge). It should work in any VST3 host, but other hosts are
