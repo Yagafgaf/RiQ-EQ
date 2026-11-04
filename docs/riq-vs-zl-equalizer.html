@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RiQ vs ZL Equalizer 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: one 920px column, a bench sheet; summary ratio chart, then one strip per scenario, then the full table and method */
+:root {
+  --bg: #f6f7f9;
+  --surface: #fcfcfd;
+  --ink: #10131a;
+  --ink-2: #4b5160;
+  --muted: #858b98;
+  --grid: #e0e3ea;
+  --rule: #c5cad4;
+  --accent: #2a78d6;
+  --c-riq: #2a78d6;
+  --c-zl: #eb6834;
+  --c-proq: #1baf7a;
+  --c-meq: #eda100;
+  --c-reaeq: #e87ba4;
+  --ring: rgba(16,19,26,0.10);
+  --tip-bg: #10131a;
+  --tip-fg: #f3f4f7;
+  --f-display: "Unbounded", "Golos Text", system-ui, sans-serif;
+  --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1015; --surface: #171a20; --ink: #eef0f4; --ink-2: #b9bfcb; --muted: #858b98;
+    --grid: #262a33; --rule: #363b46; --accent: #3987e5;
+    --c-riq: #3987e5; --c-zl: #d95926; --c-proq: #199e70; --c-meq: #c98500; --c-reaeq: #d55181;
+    --ring: rgba(255,255,255,0.10); --tip-bg: #eef0f4; --tip-fg: #10131a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1015; --surface: #171a20; --ink: #eef0f4; --ink-2: #b9bfcb; --muted: #858b98;
+  --grid: #262a33; --rule: #363b46; --accent: #3987e5;
+  --c-riq: #3987e5; --c-zl: #d95926; --c-proq: #199e70; --c-meq: #c98500; --c-reaeq: #d55181;
+  --ring: rgba(255,255,255,0.10); --tip-bg: #eef0f4; --tip-fg: #10131a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 64px;
+}
+.page { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+h1, h2 { text-wrap: balance; margin: 0; }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(26px, 5vw, 40px); line-height: 1.12; letter-spacing: -0.01em; }
+h2 { font-family: var(--f-display); font-weight: 500; font-size: 19px; line-height: 1.3; }
+p { margin: 0; max-width: 68ch; }
+.eyebrow { font-family: var(--f-data); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 17px; color: var(--ink-2); }
+.lede b { color: var(--ink); font-weight: 600; }
+header { display: flex; flex-direction: column; gap: 14px; }
+.specs { display: flex; flex-wrap: wrap; gap: 6px 8px; margin-top: 4px; }
+.specs span { font-family: var(--f-data); font-size: 12px; color: var(--ink-2); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 8px; }
+section { display: flex; flex-direction: column; gap: 16px; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+.sec-head > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.note { font-size: 13px; color: var(--muted); }
+.panel { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 20px; }
+
+/* N switch */
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.seg button { font: 500 13px var(--f-data); color: var(--ink-2); background: transparent; border: 0; padding: 6px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.seg button:focus-visible, .tbl-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Ratio chart */
+.ratio { display: grid; grid-template-columns: minmax(0, 15em) 1fr; gap: 6px 14px; align-items: center; }
+.ratio .lab { font-size: 13.5px; color: var(--ink-2); line-height: 1.3; }
+.ratio .lab small { display: block; font-family: var(--f-data); font-size: 11px; color: var(--muted); }
+.track { position: relative; height: 22px; }
+.track .grid { position: absolute; inset: 0; background-image: linear-gradient(to right, var(--grid) 1px, transparent 1px); pointer-events: none; }
+.bar { position: absolute; left: 0; top: 50%; height: 14px; transform: translateY(-50%); border-radius: 0 4px 4px 0; min-width: 2px; }
+.bar-val { position: absolute; top: 50%; transform: translateY(-50%); font: 500 12.5px var(--f-data); color: var(--ink); white-space: nowrap; padding-left: 8px; font-variant-numeric: tabular-nums; }
+.axis { display: grid; grid-template-columns: minmax(0, 15em) 1fr; gap: 14px; }
+.axis .ticks { position: relative; height: 16px; border-top: 1px solid var(--rule); }
+.axis .ticks span { position: absolute; top: 2px; transform: translateX(-50%); font: 11px var(--f-data); color: var(--muted); }
+.parity { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 1px dashed var(--muted); pointer-events: none; }
+
+/* Scenario strips */
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.strips { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 16px; }
+.strip { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.strip h3 { margin: 0; font-size: 14.5px; font-weight: 600; line-height: 1.3; }
+.strip .sub { font-family: var(--f-data); font-size: 11.5px; color: var(--muted); }
+.rows { display: grid; grid-template-columns: 6.6em 1fr; gap: 3px 10px; align-items: center; }
+.rows .nm { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+.rows .track { height: 20px; }
+.rows .na { font: 12px var(--f-data); color: var(--muted); }
+.hit { position: absolute; inset: 0; cursor: default; }
+.strip .verdict { font-size: 12.5px; color: var(--ink-2); border-top: 1px solid var(--grid); padding-top: 8px; }
+.strip .verdict b { font-family: var(--f-data); font-weight: 500; color: var(--ink); }
+
+/* Tooltip */
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--tip-bg); color: var(--tip-fg); font: 12px/1.45 var(--f-data); padding: 7px 10px; border-radius: 6px; max-width: 260px; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--ring); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 8px 12px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+thead th { font-weight: 600; font-size: 12px; color: var(--ink-2); border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: var(--surface); }
+thead tr.grp th { font-family: var(--f-data); font-weight: 500; color: var(--muted); border-bottom: 1px solid var(--grid); text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; }
+tbody td { border-bottom: 1px solid var(--grid); font-family: var(--f-data); font-size: 12.5px; }
+tbody td:first-child { font-family: var(--f-body); font-size: 13px; }
+tbody tr:last-child td { border-bottom: 0; }
+td.sep, th.sep { border-left: 1px solid var(--rule); }
+td.r { color: var(--ink); font-weight: 500; }
+.dash { color: var(--muted); }
+
+/* Method */
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 24px 40px; }
+.cols > div { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.cols h3 { margin: 0; font-size: 14px; font-weight: 600; }
+ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 6px; color: var(--ink-2); font-size: 14px; }
+code { font-family: var(--f-data); font-size: 0.88em; overflow-wrap: anywhere; }
+@media (max-width: 560px) {
+  .ratio, .axis { grid-template-columns: minmax(0, 9.5em) 1fr; }
+  .panel { padding: 16px 14px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bar { transition: width 240ms ease; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <div class="eyebrow">CPU benchmark · 2026-11-04</div>
+    <h1>RiQ vs ZL Equalizer 2</h1>
+    <p class="lede">RiQ is cheaper than ZL Equalizer 2 <b>in all nine scenarios</b>: <b>2.6–14 times</b> at 30 instances, least with dynamic bands, most with many instances of a few bells. In the same runs ZL also costs 1.1–2 times as much as Pro-Q 4.</p>
+    <div class="specs">
+      <span>RiQ 0.835</span><span>ZL Equalizer 2 1.4.1 · x86-64-AVX2</span><span>Pro-Q 4 · MEqualizer · ReaEQ</span>
+      <span>Wine-REAPER 7.84 x64</span><span>60 s of noise · best of 3</span><span>Ryzen 9 5950X</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2>How many times cheaper RiQ is than ZL</h2>
+        <p class="note">ZL cost / RiQ cost per instance. The dashed line is equal cost.</p>
+      </div>
+      <div class="seg" role="group" aria-label="Number of instances">
+        <button type="button" id="n30" data-n="30" aria-pressed="true">N = 30</button>
+        <button type="button" id="n10" data-n="10" aria-pressed="false">N = 10</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ratio" id="ratio"></div>
+      <div class="axis" style="margin-top:6px"><div></div><div class="ticks" id="ratio-ticks"></div></div>
+    </div>
+    <p class="note" id="ratio-note"></p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2>Cost of one instance, by scenario</h2>
+        <p class="note">% of one core in real time, the same measure as the FX CPU column in REAPER. Each scenario has its own scale: compare plugins within a card.</p>
+      </div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="strips" id="strips"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2>All numbers</h2>
+        <p class="note">N = 30 is the mean of two runs, their spread in brackets. “—” means the plugin can’t do it: ReaEQ has only 12 dB/oct cuts and no dynamics, MEqualizer has 6 bands.</p>
+      </div>
+    </div>
+    <div class="tbl-wrap" tabindex="0" role="region" aria-label="Results table">
+      <table id="tbl"></table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2>ZL gets more expensive with more instances</h2>
+        <p class="note">The “8 bands” scenario. N = 2 is a trial run with one repeat, so its numbers are rough.</p>
+      </div>
+    </div>
+    <div class="tbl-wrap" tabindex="0" role="region" aria-label="Cost by number of instances">
+      <table>
+        <thead><tr><th>Instances</th><th>RiQ, %</th><th>ZL, %</th><th class="sep">ZL / RiQ</th></tr></thead>
+        <tbody>
+          <tr><td>2</td><td>0.0239</td><td>0.0564</td><td class="sep r">×2.4</td></tr>
+          <tr><td>10</td><td>0.0114</td><td>0.2286</td><td class="sep r">×20</td></tr>
+          <tr><td>30</td><td>0.0502</td><td>0.2878</td><td class="sep r">×5.7</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">ZL’s cost per instance grows from 0.056 to 0.288 %, five times. The cause was not investigated. RiQ’s figure at N = 10 is lower than at N = 2 and N = 30: at small N the freeze hides part of the work of cheap plugins (a known property of the method).</p>
+  </section>
+
+  <section>
+    <h2>How it was measured</h2>
+    <div class="cols">
+      <div>
+        <h3>Method</h3>
+        <ul>
+          <li>A track gets N identical copies of the plugin over 60 s of noise and is frozen (offline render) three times. The best time minus that of a track without FX is the plugins’ cost.</li>
+          <li>The N = 10 run: 111 freezes, none discarded. The two N = 30 runs: 109 freezes and 5 discarded (“Nothing to render”) each; discarded ones were repeated, every cell has a result.</li>
+          <li>The “4 bells” and “HP+LP” scenarios always run 18 and 24 instances, so their rows have the same N in both modes.</li>
+          <li>Parameters are set by their displayed values, so every plugin gets the same curve. Windows builds of every plugin, run natively in Windows REAPER under Wine, with no bridge.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>ZL settings and caveats</h3>
+        <ul>
+          <li>The AVX2 build: RiQ also runs its AVX2 path on this CPU. The .vst3 was taken out of the .msi without running the installer.</li>
+          <li>Minimum Phase structure (the default, zero latency). For linear phase, ZL’s Zero Phase against RiQ’s Medium: they work differently, so the comparison is rough.</li>
+          <li>Dynamics: threshold −30 dB, Target Gain = band gain − 6 dB (matching RiQ’s −6 dB range).</li>
+          <li>Figures below ~0.01 % and rows with different N can’t be compared with each other.</li>
+          <li>Checked by numbers, not by ear. That ZL processes the audio shows in its cost growing with the number of bands.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+const RUNS = {"run1": {"rows": {"1 bell": {"RiQ": 0.0106, "ProQ": 0.0118, "MEq": 0.0107, "ReaEQ": 0.0048, "ZL": 0.0142}, "6 static 12dB": {"RiQ": 0.0122, "ProQ": 0.0559, "MEq": 0.0224, "ReaEQ": 0.0185, "ZL": 0.1533}, "8 static": {"RiQ": 0.0114, "ProQ": 0.101, "MEq": null, "ReaEQ": null, "ZL": 0.2286}, "8 static 12dB": {"RiQ": 0.0111, "ProQ": 0.0864, "MEq": null, "ReaEQ": 0.0519, "ZL": 0.2227}, "8, 4 dynamic": {"RiQ": 0.2779, "ProQ": 0.6011, "MEq": null, "ReaEQ": null, "ZL": 0.7613}, "8 linear phase": {"RiQ": 0.0633, "ProQ": 0.2268, "MEq": null, "ReaEQ": null, "ZL": 0.3968}, "16 bells": {"RiQ": 0.0134, "ProQ": 0.2147, "MEq": null, "ReaEQ": 0.181, "ZL": 0.4934}, "4 bells x18": {"RiQ": 0.0091, "ProQ": 0.0646, "MEq": 0.0358, "ReaEQ": 0.0266, "ZL": 0.123}, "HP+LP 24dB x24": {"RiQ": 0.0181, "ProQ": 0.0674, "MEq": null, "ReaEQ": 0.0395, "ZL": 0.0729}}}, "run2": {"rows": {"1 bell": {"RiQ": 0.0094, "ProQ": 0.0364, "MEq": 0.0219, "ReaEQ": 0.0038, "ZL": 0.0391}, "6 static 12dB": {"RiQ": 0.0313, "ProQ": 0.1148, "MEq": 0.0239, "ReaEQ": 0.08, "ZL": 0.2124}, "8 static": {"RiQ": 0.0502, "ProQ": 0.1583, "MEq": null, "ReaEQ": null, "ZL": 0.2887}, "8 static 12dB": {"RiQ": 0.0345, "ProQ": 0.1452, "MEq": null, "ReaEQ": 0.1126, "ZL": 0.2815}, "8, 4 dynamic": {"RiQ": 0.3127, "ProQ": 0.6646, "MEq": null, "ReaEQ": null, "ZL": 0.8213}, "8 linear phase": {"RiQ": 0.1252, "ProQ": 0.3817, "MEq": null, "ReaEQ": null, "ZL": 0.5102}, "16 bells": {"RiQ": 0.0615, "ProQ": 0.2739, "MEq": null, "ReaEQ": 0.2426, "ZL": 0.553}, "4 bells x18": {"RiQ": 0.0081, "ProQ": 0.0643, "MEq": 0.0312, "ReaEQ": 0.0262, "ZL": 0.1229}, "HP+LP 24dB x24": {"RiQ": 0.0192, "ProQ": 0.0685, "MEq": null, "ReaEQ": 0.0396, "ZL": 0.0738}}}, "run3": {"rows": {"1 bell": {"RiQ": 0.0093, "ProQ": 0.0362, "MEq": 0.0225, "ReaEQ": 0.0034, "ZL": 0.0389}, "6 static 12dB": {"RiQ": 0.0309, "ProQ": 0.114, "MEq": 0.0166, "ReaEQ": 0.0797, "ZL": 0.2114}, "8 static": {"RiQ": 0.0502, "ProQ": 0.1579, "MEq": null, "ReaEQ": null, "ZL": 0.2868}, "8 static 12dB": {"RiQ": 0.0349, "ProQ": 0.144, "MEq": null, "ReaEQ": 0.1121, "ZL": 0.2801}, "8, 4 dynamic": {"RiQ": 0.3107, "ProQ": 0.6591, "MEq": null, "ReaEQ": null, "ZL": 0.8177}, "8 linear phase": {"RiQ": 0.1245, "ProQ": 0.359, "MEq": null, "ReaEQ": null, "ZL": 0.5037}, "16 bells": {"RiQ": 0.0618, "ProQ": 0.271, "MEq": null, "ReaEQ": 0.2431, "ZL": 0.5571}, "4 bells x18": {"RiQ": 0.01, "ProQ": 0.0619, "MEq": 0.0277, "ReaEQ": 0.0268, "ZL": 0.1231}, "HP+LP 24dB x24": {"RiQ": 0.0187, "ProQ": 0.0657, "MEq": null, "ReaEQ": 0.0403, "ZL": 0.0733}}}};
+
+const SCEN = [
+  ["1 bell", "1 bell", "510 Hz, +12 dB, Q 1"],
+  ["6 static 12dB", "6 bands, 12 dB/oct cuts", "cuts, shelves, 2 bells"],
+  ["8 static", "8 bands", "Low Cut 24 dB/oct, shelves, 4 bells, High Cut"],
+  ["8 static 12dB", "8 bands, 12 dB/oct cuts", "the same, both cuts 12 dB/oct"],
+  ["8, 4 dynamic", "8 bands, 4 dynamic", "threshold −30 dB, range −6 dB"],
+  ["8 linear phase", "8 bands, linear phase", "RiQ Medium, ZL Zero Phase, Pro-Q Medium"],
+  ["16 bells", "16 bells", "40 Hz – 16 kHz, ±3 dB, Q 1.5"],
+  ["4 bells x18", "4 bells", "always 18 instances", 18],
+  ["HP+LP 24dB x24", "HP+LP 24 dB/oct", "200 Hz and 4.5 kHz, always 24 instances", 24],
+];
+const PLUG = [
+  ["RiQ", "RiQ", "--c-riq"],
+  ["ZL", "ZL EQ 2", "--c-zl"],
+  ["ProQ", "Pro-Q 4", "--c-proq"],
+  ["MEq", "MEqualizer", "--c-meq"],
+  ["ReaEQ", "ReaEQ", "--c-reaeq"],
+];
+
+function cell(n, s, p) {
+  if (n === 10) { const v = RUNS.run1.rows[s][p]; return v == null ? null : { v, lo: v, hi: v }; }
+  const a = RUNS.run2.rows[s][p], b = RUNS.run3.rows[s][p];
+  if (a == null || b == null) return null;
+  return { v: (a + b) / 2, lo: Math.min(a, b), hi: Math.max(a, b) };
+}
+const pct = v => v < 0.1 ? v.toFixed(4) : v.toFixed(3);
+const times = r => "×" + (r >= 10 ? r.toFixed(0) : r.toFixed(1));
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+
+const tip = document.getElementById("tip");
+function showTip(e, html) {
+  tip.innerHTML = html; tip.hidden = false;
+  const r = tip.getBoundingClientRect();
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
+  tip.style.left = Math.max(8, x) + "px"; tip.style.top = Math.max(8, y) + "px";
+}
+function hideTip() { tip.hidden = true; }
+function hover(node, html) {
+  node.addEventListener("pointermove", e => showTip(e, html));
+  node.addEventListener("pointerleave", hideTip);
+}
+
+function niceMax(m) {
+  const steps = [0.01, 0.02, 0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 5, 10, 20, 25, 40, 50];
+  return steps.find(s => s >= m) || m;
+}
+
+function renderRatio(n) {
+  const box = document.getElementById("ratio"); box.innerHTML = "";
+  const data = SCEN.map(([k, name, sub, fixed]) => {
+    const r = cell(n, k, "RiQ"), z = cell(n, k, "ZL");
+    return { k, name, sub, fixed, ratio: z.v / r.v, r, z };
+  });
+  const max = n === 30 ? 15 : 40;
+  const tickStep = n === 30 ? 5 : 10;
+  data.forEach(d => {
+    const lab = el("div", "lab", d.name + (d.fixed ? `<small>N = ${d.fixed}</small>` : ""));
+    const track = el("div", "track");
+    track.appendChild(el("div", "grid")).style.backgroundSize = (tickStep / max * 100) + "% 100%";
+    const par = el("div", "parity"); par.style.left = (1 / max * 100) + "%"; track.appendChild(par);
+    const w = Math.min(d.ratio, max) / max * 100;
+    const bar = el("div", "bar"); bar.style.width = w + "%"; bar.style.background = "var(--c-riq)";
+    track.appendChild(bar);
+    const val = el("div", "bar-val", times(d.ratio)); val.style.left = w + "%"; track.appendChild(val);
+    const hit = el("div", "hit"); track.appendChild(hit);
+    hover(hit, `<b>${d.name}</b>${d.fixed ? " · N = " + d.fixed : " · N = " + n}<br>RiQ ${pct(d.r.v)} %<br>ZL ${pct(d.z.v)} %<br>RiQ is ${d.ratio.toFixed(2)}× cheaper`);
+    box.append(lab, track);
+  });
+  const ticks = document.getElementById("ratio-ticks"); ticks.innerHTML = "";
+  for (let t = 0; t <= max; t += tickStep) { const s = el("span", null, t === 0 ? "0" : "×" + t); s.style.left = (t / max * 100) + "%"; ticks.appendChild(s); }
+  const rs = data.map(d => d.ratio);
+  document.getElementById("ratio-note").textContent = n === 30
+    ? `At N = 30 RiQ is cheaper by ${times(Math.min(...rs))} (dynamics) to ${times(Math.max(...rs))} (4 bells ×18). One bell: ${times(data[0].ratio)}.`
+    : `At N = 10 the spread is wider: from ${times(Math.min(...rs))} on one bell (both costs are close to that of an empty VST3) to ${times(Math.max(...rs))} on 16 bells. A small N understates cheap plugins, so N = 30 is the main figure.`;
+}
+
+function renderStrips(n) {
+  const box = document.getElementById("strips"); box.innerHTML = "";
+  SCEN.forEach(([k, name, sub, fixed]) => {
+    const card = el("div", "strip");
+    card.append(el("h3", null, name), el("div", "sub", sub + (fixed ? "" : ` · N = ${n}`)));
+    const vals = PLUG.map(([p]) => cell(n, k, p));
+    const max = niceMax(Math.max(...vals.filter(Boolean).map(c => c.hi)) * 1.28);
+    const rows = el("div", "rows");
+    PLUG.forEach(([p, label, color], i) => {
+      rows.appendChild(el("div", "nm", label));
+      const c = vals[i];
+      if (!c) { rows.appendChild(el("div", "na", "can’t do it")); return; }
+      const track = el("div", "track");
+      const w = c.v / max * 100;
+      const bar = el("div", "bar"); bar.style.width = w + "%"; bar.style.background = `var(${color})`;
+      track.appendChild(bar);
+      const val = el("div", "bar-val", pct(c.v)); val.style.left = w + "%"; track.appendChild(val);
+      const hit = el("div", "hit"); track.appendChild(hit);
+      const riq = vals[0].v;
+      const rng = n === 30 ? `<br>runs: ${pct(c.lo)} … ${pct(c.hi)}` : "";
+      const rel = p === "RiQ" ? "" : `<br>RiQ is ${(c.v / riq).toFixed(2)}× cheaper`;
+      hover(hit, `<b>${label}</b> · ${name}<br>${pct(c.v)} % of a core${rng}${rel}`);
+      rows.appendChild(track);
+    });
+    card.appendChild(rows);
+    const z = vals[1], r = vals[0];
+    card.appendChild(el("div", "verdict", `ZL / RiQ: <b>${times(z.v / r.v)}</b>`));
+    box.appendChild(card);
+  });
+}
+
+function renderTable() {
+  const t = document.getElementById("tbl");
+  const head = `<thead><tr class="grp"><th></th><th colspan="5">N = 10 (1 run)</th><th class="sep" colspan="5">N = 30 (2 runs)</th><th class="sep">ZL / RiQ</th></tr>
+    <tr><th>Scenario</th>${PLUG.map(p => `<th>${p[1]}</th>`).join("")}${PLUG.map((p, i) => `<th${i ? "" : ' class="sep"'}>${p[1]}</th>`).join("")}<th class="sep">N = 30</th></tr></thead>`;
+  const body = SCEN.map(([k, name, , fixed]) => {
+    const a = PLUG.map(([p]) => { const c = cell(10, k, p); return `<td>${c ? pct(c.v) : '<span class="dash">—</span>'}</td>`; }).join("");
+    const b = PLUG.map(([p], i) => {
+      const c = cell(30, k, p);
+      const txt = c ? pct(c.v) + (c.hi - c.lo > 0.00005 ? ` <span class="dash">(${pct(c.lo)}–${pct(c.hi)})</span>` : "") : '<span class="dash">—</span>';
+      return `<td${i ? "" : ' class="sep"'}>${txt}</td>`;
+    }).join("");
+    const ratio = cell(30, k, "ZL").v / cell(30, k, "RiQ").v;
+    return `<tr><td>${name}${fixed ? ` <span class="dash">×${fixed}</span>` : ""}</td>${a}${b}<td class="sep r">${times(ratio)}</td></tr>`;
+  }).join("");
+  t.innerHTML = head + "<tbody>" + body + "</tbody>";
+}
+
+function renderLegend() {
+  document.getElementById("legend").innerHTML = PLUG.map(([, l, c]) => `<span><i style="background:var(${c})"></i>${l}</span>`).join("");
+}
+
+let N = 30;
+try { const s = localStorage.getItem("riq-zl-n"); if (s === "10" || s === "30") N = +s; } catch (e) {}
+function setN(n) {
+  N = n;
+  document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === n)));
+  renderRatio(n); renderStrips(n); hideTip();
+  try { localStorage.setItem("riq-zl-n", String(n)); } catch (e) {}
+}
+document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => setN(+b.dataset.n)));
+renderLegend(); renderTable(); setN(N);
+</script>
+</body>
+</html>
