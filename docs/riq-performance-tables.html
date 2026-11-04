@@ -1,0 +1,229 @@
+<!-- RiQ performance tables.
+     If your editor strips <style>, move the CSS block into the page
+     stylesheet; the tables themselves are plain HTML. -->
+<div class="riq-bench">
+<style>
+  .riq-bench {
+    --riq-line: rgba(128, 128, 128, .35);
+    --riq-head: rgba(128, 128, 128, .12);
+    --riq-zebra: rgba(128, 128, 128, .055);
+  }
+  .riq-bench h3 { margin: 1.8em 0 .4em; font-size: 1.05em; }
+  .riq-bench__scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .riq-bench table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .95em;
+    line-height: 1.45;
+    font-variant-numeric: tabular-nums;
+  }
+  .riq-bench caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    padding: 0 0 .5em;
+  }
+  .riq-bench th, .riq-bench td {
+    padding: .5em .7em;
+    border-bottom: 1px solid var(--riq-line);
+    vertical-align: top;
+  }
+  .riq-bench thead th {
+    background: var(--riq-head);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .riq-bench tbody tr:nth-child(even) { background: var(--riq-zebra); }
+  .riq-bench th:first-child, .riq-bench td:first-child { text-align: left; }
+  .riq-bench .num { text-align: right; white-space: nowrap; }
+  .riq-bench .best { font-weight: 700; }
+  .riq-bench .sub { display: block; font-weight: 400; font-size: .82em; opacity: .7; }
+  .riq-bench__note { margin: .55em 0 0; font-size: .86em; line-height: 1.45; opacity: .8; }
+  .riq-bench__note ul { margin: .3em 0 0; padding-left: 1.3em; }
+  @media (max-width: 640px) {
+    .riq-bench table { font-size: .86em; }
+    .riq-bench th, .riq-bench td { padding: .45em .5em; }
+  }
+</style>
+
+<h3>1. RiQ vs Pro-Q 4 vs ReaEQ</h3>
+<p class="riq-bench__note">
+  RiQ 0.828, FabFilter Pro-Q 4 and ReaEQ (Cockos) on the same curves in
+  REAPER 7.84 (Windows builds), 30 instances on one track, 60&nbsp;s of noise,
+  best of 3 renders; the range covers two separate runs. Cost is the share of
+  one CPU core per instance in real time; lower is better. For scale,
+  0.01&nbsp;% = 6&nbsp;ms of CPU per minute of audio, and 100 such instances
+  use 1&nbsp;% of one core. Bold marks the lowest cost in the row; ratios
+  below 1 mean RiQ is cheaper.
+</p>
+<div class="riq-bench__scroll">
+<table>
+  <caption>30 instances &mdash; % of one core per instance</caption>
+  <thead>
+    <tr>
+      <th scope="col">Scenario</th>
+      <th scope="col" class="num">RiQ</th>
+      <th scope="col" class="num">Pro-Q 4</th>
+      <th scope="col" class="num">ReaEQ</th>
+      <th scope="col" class="num">RiQ / Pro-Q 4</th>
+      <th scope="col" class="num">RiQ / ReaEQ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1 bell<span class="sub">510 Hz, +12 dB, Q 1</span></th>
+      <td class="num">0.0075&ndash;0.0099&nbsp;%</td>
+      <td class="num">0.0365&nbsp;%</td>
+      <td class="num best">0.0028&ndash;0.0034&nbsp;%</td>
+      <td class="num">0.20&ndash;0.27</td>
+      <td class="num">2.7&ndash;2.9</td>
+    </tr>
+    <tr>
+      <th scope="row">6 bands, 12 dB/oct cuts<span class="sub">cuts, shelves, bells</span></th>
+      <td class="num best">0.029&ndash;0.032&nbsp;%</td>
+      <td class="num">0.116&nbsp;%</td>
+      <td class="num">0.081&ndash;0.084&nbsp;%</td>
+      <td class="num">0.25&ndash;0.27</td>
+      <td class="num">0.36&ndash;0.38</td>
+    </tr>
+    <tr>
+      <th scope="row">8 bands<span class="sub">24 and 12 dB/oct cuts, shelves, bells</span></th>
+      <td class="num best">0.050&nbsp;%</td>
+      <td class="num">0.157&ndash;0.160&nbsp;%</td>
+      <td class="num">&mdash;</td>
+      <td class="num">0.31&ndash;0.32</td>
+      <td class="num">&mdash;</td>
+    </tr>
+    <tr>
+      <th scope="row">8 bands, 12 dB/oct cuts</th>
+      <td class="num best">0.035&ndash;0.038&nbsp;%</td>
+      <td class="num">0.149&ndash;0.158&nbsp;%</td>
+      <td class="num">0.118&ndash;0.122&nbsp;%</td>
+      <td class="num">0.23&ndash;0.24</td>
+      <td class="num">0.30&ndash;0.31</td>
+    </tr>
+    <tr>
+      <th scope="row">8 bands, 4 dynamic</th>
+      <td class="num best">0.317&ndash;0.319&nbsp;%</td>
+      <td class="num">0.682&nbsp;%</td>
+      <td class="num">&mdash;</td>
+      <td class="num">0.46&ndash;0.47</td>
+      <td class="num">&mdash;</td>
+    </tr>
+    <tr>
+      <th scope="row">8 bands, linear phase<span class="sub">Medium resolution</span></th>
+      <td class="num best">0.127&ndash;0.140&nbsp;%</td>
+      <td class="num">0.371&ndash;0.372&nbsp;%</td>
+      <td class="num">&mdash;</td>
+      <td class="num">0.34&ndash;0.38</td>
+      <td class="num">&mdash;</td>
+    </tr>
+    <tr>
+      <th scope="row">16 bells</th>
+      <td class="num best">0.060&ndash;0.062&nbsp;%</td>
+      <td class="num">0.274&ndash;0.283&nbsp;%</td>
+      <td class="num">0.247&ndash;0.248&nbsp;%</td>
+      <td class="num">0.22</td>
+      <td class="num">0.24&ndash;0.25</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p class="riq-bench__note">
+  &mdash; = not run: ReaEQ cannot reproduce that scenario (no 24&nbsp;dB/oct
+  cuts, no dynamics, no linear phase). On a single bell ReaEQ is cheaper:
+  it is built into REAPER, while every VST3 instance carries a fixed host
+  overhead that is most of RiQ's cost there. From a few bands on, RiQ is the
+  cheapest of the three.
+</p>
+
+<h3>2. Mixing loads</h3>
+<p class="riq-bench__note">
+  The same setup with a typical number of instances per session: 18
+  instances with 4 bells each (200&nbsp;Hz &minus;3&nbsp;dB Q&nbsp;1.5,
+  800&nbsp;Hz +3&nbsp;dB Q&nbsp;1, 2.5&nbsp;kHz &minus;2&nbsp;dB Q&nbsp;2,
+  8&nbsp;kHz +3&nbsp;dB Q&nbsp;0.7), and 24 instances with a high pass at
+  200&nbsp;Hz and a low pass at 4.5&nbsp;kHz, both 24&nbsp;dB/oct. ReaEQ only
+  has 12&nbsp;dB/oct cuts, so it gets two of them in a row for each
+  24&nbsp;dB/oct cut: the same slope and the same number of filters.
+</p>
+<div class="riq-bench__scroll">
+<table>
+  <caption>Mixing loads &mdash; % of one core per instance</caption>
+  <thead>
+    <tr>
+      <th scope="col">Scenario</th>
+      <th scope="col" class="num">RiQ</th>
+      <th scope="col" class="num">Pro-Q 4</th>
+      <th scope="col" class="num">ReaEQ</th>
+      <th scope="col" class="num">RiQ / Pro-Q 4</th>
+      <th scope="col" class="num">RiQ / ReaEQ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">4 bells &times; 18 instances</th>
+      <td class="num best">0.0059&ndash;0.0065&nbsp;%</td>
+      <td class="num">0.059&ndash;0.065&nbsp;%</td>
+      <td class="num">0.027&nbsp;%</td>
+      <td class="num">0.09&ndash;0.11</td>
+      <td class="num">0.22&ndash;0.24</td>
+    </tr>
+    <tr>
+      <th scope="row">High pass 200 Hz + low pass 4.5 kHz, 24 dB/oct &times; 24 instances</th>
+      <td class="num best">0.0175&ndash;0.0177&nbsp;%</td>
+      <td class="num">0.064&ndash;0.070&nbsp;%</td>
+      <td class="num">0.040&nbsp;%</td>
+      <td class="num">0.25&ndash;0.28</td>
+      <td class="num">0.42&ndash;0.44</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p class="riq-bench__note">
+  Compare plugins within a row, not rows with each other. The method (an
+  offline render of the track, minus the same render without plugins)
+  under-reports very cheap instances when there are fewer of them: run at the
+  same 18 and 30 instances, RiQ with 4 bells measured 0.0046&nbsp;% and
+  0.024&nbsp;%, while 1 bell stayed at 0.006&nbsp;%. Pro-Q 4 and ReaEQ move
+  much less. Absolute numbers below about 0.01&nbsp;% are close to the
+  measurement floor.
+</p>
+
+<h3>3. Engine optimization</h3>
+<p class="riq-bench__note">
+  Native benchmark of the DSP engine alone (g++ -O3), one core of a Ryzen 9
+  5950X at 3.37&nbsp;GHz, plugin window closed. RiQ 0.81 is the first
+  release, before any optimization. Since then: bit-exact restructuring,
+  SIMD (SSE2, and AVX2/FMA chosen at run time), state-space filter sections,
+  a faster FFT for linear phase, and 64-bit processing straight from the
+  host. The output differs from 0.81 by at most &minus;126&nbsp;dB with
+  linear phase and &minus;214&nbsp;dB without it.
+</p>
+<div class="riq-bench__scroll">
+<table>
+  <caption>Engine cost &mdash; nanoseconds per stereo sample</caption>
+  <thead>
+    <tr>
+      <th scope="col">Scenario</th>
+      <th scope="col" class="num">0.81</th>
+      <th scope="col" class="num">0.828</th>
+      <th scope="col" class="num">Faster</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><th scope="row">Empty engine (0 bands)</th><td class="num">29.9</td><td class="num">0.78</td><td class="num">38&times;</td></tr>
+    <tr><th scope="row">1 bell</th><td class="num">34.1</td><td class="num">2.25</td><td class="num">15&times;</td></tr>
+    <tr><th scope="row">8 bells</th><td class="num">65.2</td><td class="num">7.96</td><td class="num">8.2&times;</td></tr>
+    <tr><th scope="row">16 bells</th><td class="num">98.6</td><td class="num">13.9</td><td class="num">7.1&times;</td></tr>
+    <tr><th scope="row">8 bands, linear phase (Medium)</th><td class="num">96.8</td><td class="num">18.5</td><td class="num">5.2&times;</td></tr>
+    <tr><th scope="row">8 bands, 4 dynamic</th><td class="num">110.6</td><td class="num">44.1</td><td class="num">2.5&times;</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="riq-bench__note">
+  With the window open the analyzer feed adds about 1&ndash;4&nbsp;ns per
+  sample. At 48&nbsp;kHz, 10&nbsp;ns per stereo sample is 0.048&nbsp;% of one
+  core.
+</p>
+</div>
