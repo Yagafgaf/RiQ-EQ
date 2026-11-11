@@ -59,6 +59,9 @@ as it was).
   entry, colour themes, GPU (OpenGL) or software rendering. "Save as
   default" in the gear menu keeps the window and the analyzer and display
   settings for new instances.
+- **REAPER embedded view:** the graph in miniature inside REAPER's track
+  panel and mixer (TCP/MCP), with the same curves, band nodes and analyzer;
+  drag a node, turn the wheel and double click to add a band there.
 - Input gain, output gain from -30 to +12 dB, polarity, Mid/Side or Left/Right input gains, output
   meters, host bypass with latency kept, mono and stereo layouts,
   64-bit processing.
@@ -79,6 +82,11 @@ as it was).
   Duplicate, Copy/Paste and Reset. Click a value above a knob to type it in.
 - **`Ctrl`/`Alt` + drag** on the graph: free listen; the wheel changes its
   width.
+- **Embedded view (REAPER):** drag a node for frequency and gain, the wheel
+  for Q, double click empty space to add a band (Low Cut below 200 Hz, High
+  Cut above 7 kHz, Bell between); right click a node for the band menu
+  (Windows and Linux; the menu is not there on macOS yet). Clicks off the
+  nodes go to REAPER; the left button does not open the plugin window.
 - Click the RiQ logo for version and credits.
 
 ## Performance
@@ -106,6 +114,8 @@ RiQ includes or derives from:
   **VST 3 SDK** by Steinberg (MIT), **NanoVG** by Mikko Mononen (zlib),
   **stb** by Sean Barrett (MIT / public domain) and the **Bitstream Vera**
   fonts (Bitstream Vera Fonts licence).
+- **REAPER SDK** by Cockos Incorporated (zlib): the headers for the
+  embedded view; no REAPER code is linked at run time.
 
 Full copyright notices and licence texts are in
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Each release ships

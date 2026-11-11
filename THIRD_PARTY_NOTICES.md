@@ -112,7 +112,7 @@ Source: https://github.com/Yagafgaf/Capibara
 
 The VST3 plugin framework RiQ is built on: the VST3 wrapper, the editor
 window, rendering and widgets. It is included as the `capibara/` git
-submodule and ships the third-party components listed in sections 5–8.
+submodule and ships the third-party components listed in sections 5–9.
 
 ## 5. VST3 SDK
 
@@ -293,4 +293,33 @@ otherwise to promote the sale, use or other dealings in this Font
 Software without prior written authorization from the Gnome Foundation
 or Bitstream Inc., respectively. For further information, contact:
 fonts at gnome dot org.
+```
+
+## 9. REAPER SDK (embedded UI headers)
+
+Copyright (c) 2026 Cockos Incorporated
+License: zlib
+Source: https://github.com/justinfrankel/reaper-sdk (commit `b2ca1ec9`)
+
+`reaper_plugin_fx_embed.h` and `reaper_vst3_interfaces.h` are vendored
+unchanged in `capibara/third_party/reaper-sdk/`, with the SDK's `LICENSE`
+next to them. They let the plugin declare the small UI REAPER draws inside
+the track panel and the mixer; no REAPER code is linked at run time.
+
+```text
+This software is provided 'as-is', without any express or implied
+warranty.  In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+claim that you wrote the original software. If you use this software
+in a product, an acknowledgment in the product documentation would be
+appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
 ```
