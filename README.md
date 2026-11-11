@@ -85,9 +85,9 @@ as it was).
   width.
 - **Embedded view (REAPER):** drag a node for frequency and gain, the wheel
   for Q, double click empty space to add a band (Low Cut below 200 Hz, High
-  Cut above 7 kHz, Bell between); right click a node for the band menu
-  (Windows and Linux; the menu is not there on macOS yet). Clicks off the
-  nodes go to REAPER; the left button does not open the plugin window.
+  Cut above 7 kHz, Bell between); right click a node for the band menu on
+  Windows, Linux and macOS. Clicks off the nodes go to REAPER; the left
+  button does not open the plugin window.
 - Click the RiQ logo for version and credits.
 
 ## Performance
