@@ -61,7 +61,8 @@ as it was).
   settings for new instances.
 - **REAPER embedded view:** the graph in miniature inside REAPER's track
   panel and mixer (TCP/MCP), with the same curves, band nodes and analyzer;
-  drag a node, turn the wheel and double click to add a band there.
+  drag a node, turn the wheel and double click to add a band there. In the
+  track panel it is wide and follows the track's height.
 - Input gain, output gain from -30 to +12 dB, polarity, Mid/Side or Left/Right input gains, output
   meters, host bypass with latency kept, mono and stereo layouts,
   64-bit processing.
